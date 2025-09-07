@@ -8,7 +8,7 @@ on:
       - 'README.md'
 
 env:
-  IMAGE_REPO: jeeaaasustest
+  IMAGE_REPO: ghcr.io/${{ github.repository_owner }}
   IMAGE_NAME: youtube-dl
 
 jobs:
@@ -60,11 +60,12 @@ jobs:
             sed -i -E 's!(python3-pip)!\1 git!i' Dockerfile
           fi
 
-      - name: Login to DockerHub
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
         uses: docker/build-push-action@v2
